@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>برای تو ❤️</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(
+    ellipse at 50% 38%,
+    #dff4ff 0%,
+    #b9e3f8 48%,
+    #91c9eb 100%
+  );
+  color: #35566d;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.glow {
+  position: fixed;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background: #ffffff;
+  filter: blur(100px);
+  opacity: .4;
+  pointer-events: none;
+}
+
+.stage {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.hint, .stage-label {
+  color: #456b85;
+  text-align: center;
+}
+
+.stage-label {
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+.envelope {
+  position: relative;
+  width: min(320px, 85vw);
+  height: 210px;
+  cursor: pointer;
+  transition: transform .5s;
+  perspective: 1000px;
+}
+
+.envelope:hover {
+  transform: translateY(-5px);
+}
+
+.envelope-body {
+  position: absolute;
+  inset: 0;
+  background: #f7c8d8;
+  border-radius: 8px;
+  box-shadow: 0 15px 35px #477b9e44;
+  z-index: 2;
+}
+
+.envelope-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #f8d7e2, #edabc5);
+  clip-path: polygon(0 0, 100% 0, 50% 65%);
+  border-radius: 8px;
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #e99fbd;
+  clip-path: polygon(0 0, 100% 0, 50% 55%);
+  transform-origin: top;
+  transition: transform .8s ease;
+  z-index: 4;
+}
+
+.envelope.open .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.envelope-heart {
+  position: absolute;
+  top: 75px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  font-size: 35px;
+  transition: opacity .3s;
+}
+
+.envelope.open .envelope-heart {
+  opacity: 0;
+}
+
+.paper {
+  position: fixed;
+  z-index: 8;
+  width: min(90vw, 520px);
+  height: min(72vh, 620px);
+  overflow-y: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%) scale(.7);
+  opacity: 0;
+  visibility: hidden;
+  background: #fffafc;
+  border-radius: 15px;
+  padding: 35px 25px;
+  box-shadow: 0 15px 50px #477b9e44;
+  transition: all .8s ease;
+  scrollbar-width: thin;
+  scrollbar-color: #e9b4c9 transparent;
+}
+
+.paper.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.paper-content {
+  color: #58404b;
+  font-size: 15px;
+  line-height: 2.4;
+  white-space: pre-line;
+  text-align: right;
+}
+
+.signature {
+  margin-top: 25px;
+  text-align: center;
+  color: #d66b9a;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.scroll-hint {
+  position: fixed;
+  z-index: 15;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: #ffffffdd;
+  color: #477b9e;
+  padding: 11px 25px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 5px 20px #477b9e33;
+  opacity: 0;
+  visibility: hidden;
+  transition: .4s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.scroll-hint.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.heart {
+  position: fixed;
+  bottom: -30px;
+  z-index: 1;
+  pointer-events: none;
+  animation: floatUp linear forwards;
+  opacity: .7;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: .8;
+  }
+  100% {
+    transform: translateY(-110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.footer {
+  position: fixed;
+  bottom: 12px;
+  color: #527b96;
+  font-size: 11px;
+  opacity: .8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="glow"></div>
+
+<main class="stage">
+  <div class="stage-label">یه نامه برای تو دارم... 💌</div>
+
+  <div class="envelope" id="envelope">
+    <div class="envelope-body"></div>
+    <div class="envelope-flap"></div>
+    <div class="envelope-heart">❤️</div>
+  </div>
+
+  <div class="hint">برای باز کردن نامه لمس کن 💗</div>
+</main>
+
+<div class="paper" id="paper">
+  <div class="paper-content">
+سلام دورت بگردم
+
+امروز هر چی گشتم پیدات نکردم حتی تا رستوران هم رفتم منتهی توی … دیر گفتی منم دیر رسیدم
+
+واقعاً ببخشید
+تا فهمیدم بدو بدو از مغازه اومدم.
+
+خودمم خیلیییی ناراحت شدم از اینکه فرصت داشتم ولی نشد ببینمت.
+
+عزیز دلم لطفاً قبلش به من بگو من قبل تو اونجا باشم
+و
+می‌ترسم از اینکه اینترنتا دوباره قطع شه هر وقت تونستی بهم زنگ بزن.
+
+(عزیزم هر شب ویدئو مسیج هاتو می‌بینم، خواستم بهت بگم که هر روز خوشگل‌تر از دیروز می‌شی)
+
+الهی دور سرت بگردم❤️
+  </div>
+
+  <div class="signature">
+    برای سیندرلای رویاهای من✨
+  </div>
+</div>
+
+<div class="scroll-hint" id="scrollHint">
+  اسکرول کن! 💙
+</div>
+
+<div class="footer">Made with love ❤️</div>
+
+<audio id="music" src="music.mp3" loop></audio>
+
+<script>
+const envelope = document.getElementById("envelope");
+const paper = document.getElementById("paper");
+const music = document.getElementById("music");
+const scrollHint = document.getElementById("scrollHint");
+
+let opened = false;
+
+envelope.addEventListener("click", () => {
+  if (opened) return;
+
+  opened = true;
+
+  envelope.classList.add("open");
+
+  music.play().catch(() => {});
+
+  setTimeout(() => {
+    paper.classList.add("show");
+    scrollHint.classList.add("show");
+
+    setTimeout(() => {
+      scrollHint.classList.remove("show");
+    }, 5000);
+
+  }, 700);
+});
+
+// Floating hearts
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+
+  const hearts = ["❤️", "💗", "💕", "💖", "💙"];
+  heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (12 + Math.random() * 18) + "px";
+  heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 10000);
+}
+
+setInterval(createHeart, 700);
+</script>
+
+</body>
+</html>
